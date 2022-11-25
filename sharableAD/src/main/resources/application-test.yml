@@ -1,0 +1,173 @@
+server:
+  port: 8888
+  servlet:
+    context-path: /api
+spring:
+  application:
+    name: sharableAD
+  config:
+    activate:
+      on-profile:
+        test
+  redis:
+    host: ENC(VClBnzFzLpqiYMtB1bkirXRxalXJUX1CrkzmzOikIx/KHhm5lpLLJufSlp0lec0o)
+    port: 6379
+    password: ENC(D3Ud6LeXS3OxjdTwdRvi400jobWyWGbtIg4hGVIH8HW46i4F29UEayroaVVTgGz3)
+    database: 0
+    lettuce:
+      pool:
+        max-idle: 16
+        max-active: 32
+        min-idle: 8
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(ktb7WCoh1WpU/d+/gbwI5r96DrUpLT1Hz6XAgprQwTgUO3IbwOXhorhxKY64+7oRJPic8ccU1/f5r9rtLf4eAjSh+y0ZZYE9rs0vh06W3K5lCoqtVsq1E7d0Rgq8Oy1JIYpzvAvCakdc7USdm+y+bRMJpzHNC1CuLEgJNP147sZkoiOFyUr4zZYtBLVESDHvppr9ukbW+1fRDh1DADHWSGwHeY8CEJ0axrFqF7IrG+qzP1Kz2LuqjekJbOrzIdfk3/wfReZ28UGlF4HuF++FMR/rddzo34rrMz6JiFvWh3w=)
+    username: root
+    password: ENC(D3Ud6LeXS3OxjdTwdRvi400jobWyWGbtIg4hGVIH8HW46i4F29UEayroaVVTgGz3)
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 30000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: true
+      test-on-return: false
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      filter:
+        stat:
+          merge-sql: true
+          slow-sql-millis: 5000
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+        session-stat-enable: true
+        session-stat-max-count: 100
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        reset-enable: true
+        login-username: admin
+        login-password: ENC(lDITIXpvqiHwp2iWMDP7HXyo9JkUgrUCwwUA/qV1TsJrYuvBzBBzOUc89mippwPw)
+        allow: 127.0.0.1
+        #deny: 192.168.1.100
+
+knife4j:
+  enable: true
+  basic:
+    enable: true
+    username: admin
+    password: ENC(LvrxLA0XrlJbgWqHy3qIIyo9kUlLeNIfWIuXQOEJEwk65GHchsHr5t3mYyj39KkD)
+
+# grpc config
+grpc:
+  client:
+    smart-contract-server:
+      ip: '127.0.0.1'
+      port: 8972
+      enableKeepAlive: true
+      keepAliveTimeout: 20s
+      keepAliveWithoutCalls: false
+      defaultLoadBalancingPolicy: round_robin
+# token keyPair
+token:
+  secret:
+    key: ENC(JvW0l4iWSahRep0ou9ynfZWD4J+iVpPREmjalYcnTivRQ608qSp9kQxH2gVsDS4YvrME7MPsx3s0yFdbOINz6oz32lvfevCA/LaFnUm9GLiYVF4CZ+zy/ynlFy6jv/ZDSM0gEqdrtT3ZZIt1JA/rvcHLI6qV1rLtnsMqI8633IA/K5gysmPv0itjt2LWSnMeXvWTQNmg7EaEQjxZrvZeakHcScmmTqICY+QdVRvb18Q=)
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-not-delete-value: 1
+
+calculate:
+  score-weight:
+    active: #user active calculate ratios
+      opus: 0.25 #opus ratio
+      like: 0.10 #like ratio
+      comment: 0.15 #comment ratio
+      focus: 0.10 #focus ratio
+      collect: 0.10 #collect ratio
+      offChainToken: 0.30 #offChainToken ratio
+    hot: #opus hot calculate ratios    hot-score = (W + I)/(T+1)^G W is reader activities I is creator activities T is time gap, unit is hour, G is gravity
+      liked: 0.30 #like ratio
+      commented: 0.30 #commented ratio
+      watched: 0.20 #watched ratio
+      collected: 0.20 #collected ratio
+      G: 1.2 #gravity
+
+amazon:
+  s3:
+    bucket-name: sad-bucket-dev
+    access-key: ENC(rCa6v14d/jHo2GEPnM2ges+s9yZatK0HALSA4n/NhxAvStFtRKXhU2QTgYXCkRUK6q3eQ0lCQqJPhxzYZR4BdQ==)
+    secret-key: ENC(uUIvz1bgOl9sgdGkpP27z7Pp8pGrv2UE0d+Tf66QORTZx7yz8KRyaCL3wEwCAj1aM39/WOo5KDIEFCE8Oc/UVRERnIlChRt6XlU6zUA9hMM=)
+    endpoint: s3.ap-southeast-1.amazonaws.com
+    region: ap-southeast-1
+    origin-file-path: /resource/origin/
+    compress-file-path: /resource/compress/
+    ad-file-path: /resource/ad/
+    video-file-path: /resource/video/
+    visit-url-prefix: https://sad-bucket-dev.s3.ap-southeast-1.amazonaws.com
+
+daily-staking:
+  single-opus-staking-numbers: 10
+  total_ratio: 0.10
+  feed_back_ratio: 0.40 #DW=>DT
+  on_sale_ratio: 0.40 #DW=>SALE
+  burn_ratio: 0.20 #DW=>BURN
+
+web3:
+  block-chain:
+    name: 'BSC-TEST'
+    url: 'https://data-seed-prebsc-1-s1.binance.org:8545/'
+    id: 97
+  token:
+    address: '0x8b1C1a86F23E6fb22DeaF2Ce04AC7500FC0BBa8C'
+    owner: '0x912379C36D054913AF29cCBadd2Fd5251110bd0e'
+    owner-private-key: '123'
+  wallet:
+    on-sale:
+      address: '0x1675cC4B278469DcC0F10f74aA6cAE5c82DE42D9'
+      private-key: '123'
+    burn:
+      address: '0xC39c44c300Ec483E714c27648eB366a1028BA5b0'
+      private-key: ENC(zJ6u7vveSVq6VrUhFxS1Yq7v26uTXuDhVD4vnTlPSR6oAKRTMh4Bdk8iTdgIG83RxmC4RyFuN//RLjyQyMYzEL9qFyYuokuXFpG01pKuxIxA3uaPSAetR1whVkcGw+MOetYdLeF+nBIl5+tIMjTRfA==)
+    deposit-withdraw:
+      address: '0x191793d3B2902d74c52FB11b64b7c4E76070BF20'
+      private-key: ENC(LSGtxWX+4C5GvMd0hMa/VH6qh1BNpOCt5jgrfn1HY6clrPy2deMI+G0Az13SUyeTe1tkKN6SbNcDIC4bgQzR1GchDIeeTYpWAzNIzA5oICgnLwpDDjvgMjPE3iUmuVos7/8dWqTrnYESZr/0mAbknQ==)
+    daily-task:
+      address: '0x2edeFd2591a6C4F418d30c6b8a21843f1Cb19dd2'
+      private-key: ENC(CczQIPL+ODiO6ZiYPJXFSlbdXvYkE+hLBJdjR2ur1VdMqkrVIntEpz1SwqMcU/oaPg87p+MFElMEjlmRg7+pH00SL2OzRiRfHbQPCqzuhZRCbQJRrblCpvcSFmy/BbjFz74EupX+bRVE45EEt4S8wQ==)
+    nft: '123'
+    defi: '123'
+
+ad:
+  auction:
+    feed_back_ratio: 0.20  #back to DT wallet
+    on_sale_ratio: 0.10 #back to onSale wallet
+    share_by_auctioneer_ratio: 0.10 #share by all the auctioneer_ratio
+    burn_ratio: 0.60 #burn
+    minimum_bid_ratio: 0.10
+    maximum_bid_days: 7
+
+reward:
+  total_ratio: 0.10
+  feed_back_ratio: 0.50
+  on_sale_ratio: 0.30
+  burn_ratio: 0.20
+
+daily-task:
+  continue_days: 30
+  feed_back_ratio: 1.00
+
+withdraw:
+  request:
+    delay-days: 3
+
+

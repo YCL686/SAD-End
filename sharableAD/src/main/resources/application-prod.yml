@@ -1,0 +1,79 @@
+server:
+  port: 8888
+  servlet:
+    context-path: /api
+spring:
+  application:
+    name: sharableAD
+  config:
+    activate:
+      on-profile:
+        prod
+  redis:
+    host: todo
+    port: 6379
+    password: todo
+    database: 0
+    lettuce:
+      pool:
+        max-idle: 16
+        max-active: 32
+        min-idle: 8
+
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: todo
+    username: todo
+    password: todo
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 30000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: true
+      test-on-return: false
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      filter:
+        stat:
+          merge-sql: true
+          slow-sql-millis: 5000
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+        session-stat-enable: true
+        session-stat-max-count: 100
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        reset-enable: true
+        login-username: admin
+        login-password: admin
+        allow: 127.0.0.1
+
+knife4j:
+  enable: true
+  basic:
+    enable: true
+    username: admin
+    password: todo
+
+# grpc config
+grpc:
+  client:
+    grpc-sb-server:
+      address: 'static://127.0.0.1:8972'
+      enableKeepAlive: true
+      keepAliveTimeout: 20s
+      keepAliveWithoutCalls: false
+      defaultLoadBalancingPolicy: round_robin
+
+  mybatis-plus:
+    configuration:
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

@@ -1,0 +1,16 @@
+syntax = "proto3";
+package proto;
+option java_package = "com.example.sharablead";
+option java_multiple_files = false;
+
+message SayHelloRequest{
+  bytes name=1;
+}
+
+message SayHelloResponse{
+  bytes result=1;
+}
+
+service SayHelloService{
+  rpc SayHello(SayHelloRequest) returns (SayHelloResponse);
+}

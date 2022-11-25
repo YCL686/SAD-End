@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.sharablead.mapper.OpusMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.sharablead.entity.Opus">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="title" property="title" />
+        <result column="summary" property="summary" />
+        <result column="text" property="text"/>
+        <result column="content" property="content" />
+        <result column="minted" property="minted" />
+        <result column="minted_address" property="mintedAddress" />
+        <result column="resource_url" property="resourceUrl" />
+        <result column="compress_resource_url" property="compressResourceUrl" />
+        <result column="hot_score" property="hotScore" />
+        <result column="status" property="status"/>
+        <result column="publish_time" property="publishTime"/>
+        <result column="gmt_created" property="gmtCreated" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, title, summary, text, content, minted, minted_address, resource_url, compress_resource_url, hot_score, status, publish_time, gmt_created, gmt_modified
+    </sql>
+
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.sharablead.mapper.DailyTaskConfigMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.sharablead.entity.DailyTaskConfig">
+        <id column="id" property="id" />
+        <result column="task_name" property="taskName" />
+        <result column="task_count" property="taskCount" />
+        <result column="task_key" property="taskKey" />
+        <result column="task_ratio" property="taskRatio" />
+        <result column="task_reward" property="taskReward" />
+        <result column="task_status" property="taskStatus" />
+        <result column="task_type" property="taskType" />
+        <result column="gmt_created" property="gmtCreated" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, task_name, task_count, task_key, task_ratio, task_reward, task_status, task_type, gmt_created, gmt_modified
+    </sql>
+
+</mapper>

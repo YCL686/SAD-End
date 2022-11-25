@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.sharablead.mapper.AdMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.sharablead.entity.Ad">
+        <id column="id" property="id" />
+        <result column="ad_index" property="adIndex" />
+        <result column="ad_name" property="adName" />
+        <result column="label" property="label" />
+        <result column="resource_url" property="resourceUrl" />
+        <result column="link" property="link" />
+        <result column="user_id" property="userId" />
+        <result column="edit_count" property="editCount" />
+        <result column="status" property="status" />
+        <result column="start_price" property="startPrice" />
+        <result column="next_action_time" property="nextAuctionTime"/>
+        <result column="gmt_created" property="gmtCreated" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, ad_index, ad_name, label, resource_url, link, user_id, edit_count, status, next_auction_time, start_price, buy_it_now_price, gmt_created, gmt_modified
+    </sql>
+
+</mapper>
