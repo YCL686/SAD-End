@@ -32,9 +32,6 @@ public class SynchronizeRecordController {
     @Autowired
     private SynchronizeRecordService synchronizeRecordService;
 
-    @Autowired
-    private Web3jService web3jService;
-
     @ApiOperation(value = "getSynchronizeRecordList", notes = APISTR + "getSynchronizeRecordList")
     @GetMapping("/getSynchronizeRecordList")
     @ApiOperationSupport(order = 1)
@@ -42,11 +39,10 @@ public class SynchronizeRecordController {
         return synchronizeRecordService.getSynchronizeRecordList(synchronizeId);
     }
 
-    @ApiOperation(value = "getDailyTaskBalance", notes = APISTR + "getDailyTaskBalance")
-    @GetMapping("/getDailyTaskBalance")
+    @ApiOperation(value = "getSynchronizeInfo", notes = APISTR + "getSynchronizeInfo")
+    @GetMapping("/getSynchronizeInfo")
     @ApiOperationSupport(order = 1)
-    public GlobalResponse getDailyTaskBalance() {
-        String fromAddress = "0x2edeFd2591a6C4F418d30c6b8a21843f1Cb19dd2";
-        return web3jService.getBalanceOf(fromAddress);
+    public GlobalResponse getSynchronizeInfo() {
+        return synchronizeRecordService.getSynchronizeInfo();
     }
 }

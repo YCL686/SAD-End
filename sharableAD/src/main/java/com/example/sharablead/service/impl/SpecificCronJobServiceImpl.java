@@ -393,6 +393,9 @@ public class SpecificCronJobServiceImpl implements SpecificCronJobService {
 
             SynchronizeRecord synchronizeRecord = new SynchronizeRecord();
             synchronizeRecord.setId(IDUtil.nextId());
+            synchronizeRecord.setSynchronizeAmount(synchronizeAmount);
+            synchronizeRecord.setTotalRatio(totalRatio);
+            synchronizeRecord.setTotalAmount(totalAmount);
             synchronizeRecord.setSynchronizeId(synchronize.getId());
             synchronizeRecord.setSynchronizeType(config.getSynchronizeType());
             synchronizeRecord.setFeedBackAmount(feedBackAmount);
@@ -401,41 +404,60 @@ public class SpecificCronJobServiceImpl implements SpecificCronJobService {
             synchronizeRecord.setFeedBackRatio(feedBackRatio);
             synchronizeRecord.setBurnRatio(burnRatio);
             synchronizeRecord.setOnSaleRatio(onSaleRatio);
-            GlobalResponse burnResponse = web3jService.synchronize(depositWithdrawAddress, burnAddress, burnAmount);
-            if (burnResponse.getCode() == GlobalResponseEnum.SUCCESS.getCode()) {
-                synchronizeRecord.setBurnStatus(SynchronizeStatusEnum.SUCCESS.getCode());
-                synchronizeRecord.setBurnMemo("-");
-                synchronizeRecord.setBurnTxHash(burnResponse.getData().toString());
-            } else {
-                synchronizeRecord.setBurnStatus(SynchronizeStatusEnum.FAIL.getCode());
-                synchronizeRecord.setBurnMemo(burnResponse.getMessage());
-                synchronizeRecord.setBurnTxHash("-");
-            }
-            GlobalResponse feedBackResponse = new GlobalResponse();
-            if (SynchronizeTypeEnum.DAILY_TASK.getCode() == config.getSynchronizeType()) { //reverse hardCode
-                feedBackResponse = web3jService.synchronize(feedBackAddress, depositWithdrawAddress, feedBackAmount);
-            } else {
-                feedBackResponse = web3jService.synchronize(depositWithdrawAddress, feedBackAddress, feedBackAmount);
-            }
-            if (feedBackResponse.getCode() == GlobalResponseEnum.SUCCESS.getCode()) {
-                synchronizeRecord.setFeedBackStatus(SynchronizeStatusEnum.SUCCESS.getCode());
-                synchronizeRecord.setFeedBackMemo("-");
-                synchronizeRecord.setFeedBackTxHash(burnResponse.getData().toString());
-            } else {
-                synchronizeRecord.setFeedBackStatus(SynchronizeStatusEnum.FAIL.getCode());
-                synchronizeRecord.setFeedBackMemo(burnResponse.getMessage());
-                synchronizeRecord.setFeedBackTxHash("-");
+            synchronizeRecord.setBurnMemo("-");
+            synchronizeRecord.setBurnStatus(SynchronizeStatusEnum.NULL.getCode());
+            synchronizeRecord.setBurnTxHash("-");
+
+            synchronizeRecord.setOnSaleMemo("-");
+            synchronizeRecord.setOnSaleStatus(SynchronizeStatusEnum.NULL.getCode());
+            synchronizeRecord.setOnSaleTxHash("-");
+
+            synchronizeRecord.setFeedBackMemo("-");
+            synchronizeRecord.setFeedBackStatus(SynchronizeStatusEnum.NULL.getCode());
+            synchronizeRecord.setFeedBackTxHash("-");
+
+            if (burnAmount.compareTo(BigDecimal.ZERO) > 0){
+                GlobalResponse burnResponse = web3jService.synchronize(depositWithdrawAddress, burnAddress, burnAmount);
+                if (burnResponse.getCode() == GlobalResponseEnum.SUCCESS.getCode()) {
+                    synchronizeRecord.setBurnStatus(SynchronizeStatusEnum.SUCCESS.getCode());
+                    synchronizeRecord.setBurnMemo("-");
+                    synchronizeRecord.setBurnTxHash(burnResponse.getData().toString());
+                } else {
+                    synchronizeRecord.setBurnStatus(SynchronizeStatusEnum.FAIL.getCode());
+                    synchronizeRecord.setBurnMemo(burnResponse.getMessage());
+                    synchronizeRecord.setBurnTxHash("-");
+                }
             }
 
-            GlobalResponse onSaleResponse = web3jService.synchronize(depositWithdrawAddress, onSaleWalletAddress, onSaleAmount);
-            if (onSaleResponse.getCode() == GlobalResponseEnum.SUCCESS.getCode()) {
-                synchronizeRecord.setOnSaleStatus(SynchronizeStatusEnum.SUCCESS.getCode());
-                synchronizeRecord.setOnSaleMemo("-");
-                synchronizeRecord.setOnSaleTxHash(burnResponse.getData().toString());
-            } else {
-                synchronizeRecord.setOnSaleStatus(SynchronizeStatusEnum.FAIL.getCode());
-                synchronizeRecord.setOnSaleMemo(burnResponse.getMessage());
-                synchronizeRecord.setOnSaleTxHash("-");
+            if (feedBackAmount.compareTo(BigDecimal.ZERO) > 0){
+                GlobalResponse feedBackResponse = new GlobalResponse();
+                if (SynchronizeTypeEnum.DAILY_TASK.getCode() == config.getSynchronizeType()) { //reverse hardCode
+                    feedBackResponse = web3jService.synchronize(feedBackAddress, depositWithdrawAddress, feedBackAmount);
+                } else {
+                    feedBackResponse = web3jService.synchronize(depositWithdrawAddress, feedBackAddress, feedBackAmount);
+                }
+                if (feedBackResponse.getCode() == GlobalResponseEnum.SUCCESS.getCode()) {
+                    synchronizeRecord.setFeedBackStatus(SynchronizeStatusEnum.SUCCESS.getCode());
+                    synchronizeRecord.setFeedBackMemo("-");
+                    synchronizeRecord.setFeedBackTxHash(feedBackResponse.getData().toString());
+                } else {
+                    synchronizeRecord.setFeedBackStatus(SynchronizeStatusEnum.FAIL.getCode());
+                    synchronizeRecord.setFeedBackMemo(feedBackResponse.getMessage());
+                    synchronizeRecord.setFeedBackTxHash("-");
+                }
+            }
+
+            if (onSaleAmount.compareTo(BigDecimal.ZERO) > 0){
+                GlobalResponse onSaleResponse = web3jService.synchronize(depositWithdrawAddress, onSaleWalletAddress, onSaleAmount);
+                if (onSaleResponse.getCode() == GlobalResponseEnum.SUCCESS.getCode()) {
+                    synchronizeRecord.setOnSaleStatus(SynchronizeStatusEnum.SUCCESS.getCode());
+                    synchronizeRecord.setOnSaleMemo("-");
+                    synchronizeRecord.setOnSaleTxHash(onSaleResponse.getData().toString());
+                } else {
+                    synchronizeRecord.setOnSaleStatus(SynchronizeStatusEnum.FAIL.getCode());
+                    synchronizeRecord.setOnSaleMemo(onSaleResponse.getMessage());
+                    synchronizeRecord.setOnSaleTxHash("-");
+                }
             }
 
             synchronizeRecord.setGmtCreated(LocalDateTime.now());

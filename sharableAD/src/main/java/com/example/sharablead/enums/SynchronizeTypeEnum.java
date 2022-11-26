@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum SynchronizeTypeEnum {
-    REWARD(0, "reward"),
+    REWARD(0, "Reward"),
     AD_AUCTION(1, "AdAuction"),
     DAILY_TASK(2, "DailyTask"),
     DAILY_STAKING(3, "DailyStaking"),

@@ -124,7 +124,7 @@ public class Web3jServiceImpl implements Web3jService {
             return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "invalid wallet address");
         }
 
-        if (Objects.isNull(amount) || BigDecimal.ZERO.equals(amount)) {
+        if (Objects.isNull(amount) || amount.compareTo(BigDecimal.ZERO) <= 0) {
             return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "invalid transfer amount");
         }
 

@@ -17,4 +17,6 @@ import java.time.LocalDate;
 public interface SynchronizeRecordService extends IService<SynchronizeRecord> {
 
     GlobalResponse getSynchronizeRecordList(Long synchronizeId);
+
+    GlobalResponse getSynchronizeInfo();
 }

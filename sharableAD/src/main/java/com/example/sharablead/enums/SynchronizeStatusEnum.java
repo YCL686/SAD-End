@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum SynchronizeStatusEnum {
     SUCCESS(0, "success"),
     FAIL(1, "fail"),
-    PENDING(2, "pending");
+    PENDING(2, "pending"),
+    NULL(3, "-");
 
     private final int code;
     private final String name;
