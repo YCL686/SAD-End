@@ -117,11 +117,11 @@ public class Web3jServiceImpl implements Web3jService {
     @Override
     public GlobalResponse synchronize(String fromAddress, String toAddress, BigDecimal amount) {
         if (!depositWithdrawAddress.equals(fromAddress) && !feedBackAddress.equals(fromAddress)) {
-            return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "invalid wallet address");
+            return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "invalid wallet  fromAddress");
         }
 
         if (!depositWithdrawAddress.equals(toAddress) && !burnAddress.equals(toAddress) && !feedBackAddress.equals(toAddress) && !onSaleWalletAddress.equals(toAddress)) {
-            return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "invalid wallet address");
+            return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "invalid wallet toAddress");
         }
 
         if (Objects.isNull(amount) || amount.compareTo(BigDecimal.ZERO) <= 0) {
