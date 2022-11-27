@@ -120,7 +120,7 @@ public class Web3jServiceImpl implements Web3jService {
             return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "invalid wallet address");
         }
 
-        if (!depositWithdrawAddress.equals(toAddress) && !burnAddress.equals(toAddress) && !feedBackAddress.equals(toAddress)) {
+        if (!depositWithdrawAddress.equals(toAddress) && !burnAddress.equals(toAddress) && !feedBackAddress.equals(toAddress) && !onSaleWalletAddress.equals(toAddress)) {
             return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "invalid wallet address");
         }
 
