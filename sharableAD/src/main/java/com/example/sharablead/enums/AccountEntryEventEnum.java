@@ -15,7 +15,9 @@ public enum  AccountEntryEventEnum {
     DAILY_STAKING(3, "DailyStaking"),
     REWARD(4, "REWARD"),
 
-    AD_AUCTION(5, "ADAuction");
+    AD_AUCTION(5, "ADAuction"),
+
+    LAUNCH(6, "Launch");
     //TODO more events to be added
 
     private final int code;

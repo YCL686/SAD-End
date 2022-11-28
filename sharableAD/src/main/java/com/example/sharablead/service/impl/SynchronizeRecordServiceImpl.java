@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,18 +89,57 @@ public class SynchronizeRecordServiceImpl extends ServiceImpl<SynchronizeRecordM
         Synchronize synchronize1 = synchronizeService.getOne(lambdaQueryWrapper2);
         Long LastSynchronizeId = Objects.isNull(synchronize1)? 0L : synchronize1.getId();
 
+        BigDecimal synchronizeAmount = BigDecimal.ZERO;
+        BigDecimal burnAmount = BigDecimal.ZERO;
+        BigDecimal onSaleAmount = BigDecimal.ZERO;
+        BigDecimal feedBackAmount = BigDecimal.ZERO;
+
+        BigDecimal lastSynchronizeAmount = BigDecimal.ZERO;
+        BigDecimal lastBurnAmount = BigDecimal.ZERO;
+        BigDecimal lastOnSaleAmount = BigDecimal.ZERO;
+        BigDecimal lastFeedBackAmount = BigDecimal.ZERO;
+
         GetSynchronizeInfoVO vo = new GetSynchronizeInfoVO();
         for (SynchronizeRecord record : list){
-            int type = record.getSynchronizeType();
+            synchronizeAmount = synchronizeAmount.add(record.getSynchronizeAmount());
+            burnAmount = burnAmount.add(record.getBurnAmount());
+            onSaleAmount = onSaleAmount.add(record.getOnSaleAmount());
+            feedBackAmount = feedBackAmount.add(record.getFeedBackAmount());
+        }
 
-            vo.setBurnAmount(vo.getBurnAmount().add(record.getBurnAmount()));
-            vo.setOnSaleAmount(vo.getOnSaleAmount().add(record.getOnSaleAmount()));
-            if (type == SynchronizeTypeEnum.DAILY_TASK.getCode()){
-                vo.setFeedBackAmountMinus(vo.getFeedBackAmountMinus().add(record.getFeedBackAmount()));
-            }else {
-                vo.setFeedBackAmountPlus(vo.getFeedBackAmountPlus().add(record.getFeedBackAmount()));
+        LambdaQueryWrapper<SynchronizeRecord> lambdaQueryWrapper3 = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper3.eq(SynchronizeRecord::getSynchronizeId, LastSynchronizeId);
+        List<SynchronizeRecord> lastList = synchronizeRecordService.list(lambdaQueryWrapper3);
+
+        if (!CollectionUtils.isEmpty(lastList)){
+            for (SynchronizeRecord record : lastList){
+                lastSynchronizeAmount = lastSynchronizeAmount.add(record.getSynchronizeAmount());
+                lastBurnAmount = lastBurnAmount.add(record.getBurnAmount());
+                lastOnSaleAmount = lastOnSaleAmount.add(record.getOnSaleAmount());
+                lastFeedBackAmount = lastFeedBackAmount.add(record.getFeedBackAmount());
             }
         }
-        return null;
+
+        vo.setSynchronizeAmount(synchronizeAmount);
+        vo.setFeedBackAmount(feedBackAmount);
+        vo.setBurnAmount(burnAmount);
+        vo.setOnSaleAmount(onSaleAmount);
+
+        if (lastSynchronizeAmount.compareTo(BigDecimal.ZERO) > 0){
+            vo.setSynchronizeAmountGrowthRate((synchronizeAmount.subtract(lastSynchronizeAmount)).multiply(BigDecimal.valueOf(100)).divide(lastSynchronizeAmount, 2, RoundingMode.HALF_UP));
+        }
+
+        if (lastBurnAmount.compareTo(BigDecimal.ZERO) > 0){
+            vo.setBurnAmountGrowthRate((burnAmount.subtract(lastBurnAmount)).multiply(BigDecimal.valueOf(100)).divide(lastBurnAmount, 2, RoundingMode.HALF_UP));
+        }
+
+        if (lastFeedBackAmount.compareTo(BigDecimal.ZERO) > 0){
+            vo.setFeedBackAmountGrowthRate((feedBackAmount.subtract(lastFeedBackAmount)).multiply(BigDecimal.valueOf(100)).divide(lastFeedBackAmount, 2, RoundingMode.HALF_UP));
+        }
+
+        if (lastOnSaleAmount.compareTo(BigDecimal.ZERO) > 0){
+            vo.setOnSaleAmountGrowthRate((onSaleAmount.subtract(lastOnSaleAmount)).multiply(BigDecimal.valueOf(100)).divide(lastOnSaleAmount, 2, RoundingMode.HALF_UP));
+        }
+        return GlobalResponse.success(vo);
     }
 }

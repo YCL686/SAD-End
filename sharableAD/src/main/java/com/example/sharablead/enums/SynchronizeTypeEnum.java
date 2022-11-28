@@ -8,7 +8,8 @@ public enum SynchronizeTypeEnum {
     AD_AUCTION(1, "AdAuction"),
     DAILY_TASK(2, "DailyTask"),
     DAILY_STAKING(3, "DailyStaking"),
-    NFT(4, "NFT");
+    NFT(4, "NFT"),
+    LAUNCH(5, "Launch");
     //TODO more type to be continue...
 
     private final int code;

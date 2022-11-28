@@ -16,4 +16,6 @@ public interface SpecificCronJobService {
     void processWithdrawRequest();
 
     void processAdAuctionBusiness();
+
+    void launchStart();
 }

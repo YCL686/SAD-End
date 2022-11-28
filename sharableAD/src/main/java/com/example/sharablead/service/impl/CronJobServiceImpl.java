@@ -79,6 +79,10 @@ public class CronJobServiceImpl extends ServiceImpl<CronJobMapper, CronJob> impl
                 specificCronJobService.processAdAuctionBusiness();
                 log.info("{} execution finished, caused {} ms", CronJobCodeEnum.getName(cronJobCode), System.currentTimeMillis() - time);
                 break;
+            case 7:
+                specificCronJobService.launchStart();
+                log.info("{} execution finished, caused {} ms", CronJobCodeEnum.getName(cronJobCode), System.currentTimeMillis() - time);
+                break;
         }
     }
 

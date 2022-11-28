@@ -1,5 +1,6 @@
 package com.example.sharablead.response;
 
+import com.example.sharablead.entity.Synchronize;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -11,19 +12,19 @@ import java.math.BigDecimal;
 @Data
 public class GetSynchronizeInfoVO {
 
-    private BigDecimal feedBackAmountPlus = BigDecimal.ZERO;
+    private BigDecimal synchronizeAmount = BigDecimal.ZERO;
 
-    private BigDecimal feedBackAmountMinus = BigDecimal.ZERO;
+    private BigDecimal feedBackAmount = BigDecimal.ZERO;
 
     private BigDecimal onSaleAmount = BigDecimal.ZERO;
 
     private BigDecimal burnAmount = BigDecimal.ZERO;
 
-    private BigDecimal feedBackAmountPlusGrowthRate;
+    private BigDecimal synchronizeAmountGrowthRate = BigDecimal.ZERO.setScale(2);
 
-    private BigDecimal feedBackAmountMinusGrowthRate;
+    private BigDecimal feedBackAmountGrowthRate = BigDecimal.ZERO.setScale(2);
 
-    private BigDecimal onSaleAmountGrowthRate;
+    private BigDecimal onSaleAmountGrowthRate = BigDecimal.ZERO.setScale(2);
 
-    private BigDecimal burnAmountGrowthRate;
+    private BigDecimal burnAmountGrowthRate = BigDecimal.ZERO.setScale(2);
 }

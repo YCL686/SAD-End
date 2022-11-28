@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.sharablead.mapper.LaunchRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.sharablead.entity.LaunchRecord">
+        <id column="id" property="id" />
+        <result column="launch_id" property="launchId" />
+        <result column="user_id" property="userId" />
+        <result column="launch_price" property="launchPrice" />
+        <result column="launch_title" property="launchTitle" />
+        <result column="launch_description" property="launchDescription" />
+        <result column="launch_link" property="launchLink" />
+        <result column="launch_url" property="launchUrl" />
+        <result column="gmt_created" property="gmtCreated" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, launch_id, user_id, launch_price, launch_title, launch_description, launch_link, launch_url, gmt_created, gmt_modified
+    </sql>
+
+</mapper>

@@ -170,4 +170,13 @@ withdraw:
   request:
     delay-days: 3
 
+launch:
+  config:
+    size: 24 #timeline will be split as 00:00 to 23:00
+    default-price: 1000.00 # the price will decline as the time is far from current
+    decline-ratio: 0.10
+    count: 5
+    before-size: 2
+    after-size: 4
+
 

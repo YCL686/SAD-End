@@ -139,6 +139,23 @@ public class SpecificCronJobServiceImpl implements SpecificCronJobService {
     @Autowired
     private AccountEntryService accountEntryService;
 
+    @Autowired
+    private LaunchService launchService;
+
+    @Value("${launch.config.size}")
+    private Integer launchSize;
+
+    @Value("${launch.config.default-price}")
+    private BigDecimal defaultPrice;
+
+    @Value("${launch.config.decline-ratio}")
+    private BigDecimal declineRatio;
+
+    @Value("${launch.config.count}")
+    private Integer launchCount;
+
+    @Autowired
+    private LaunchRecordService launchRecordService;
 
     @Override
     public void calculateActiveScore() {
@@ -398,6 +415,22 @@ public class SpecificCronJobServiceImpl implements SpecificCronJobService {
 
             }
 
+            if (SynchronizeTypeEnum.LAUNCH.getCode() == config.getSynchronizeType()){
+                LambdaQueryWrapper<Launch> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+                lambdaQueryWrapper.eq(Launch::getLaunchDate, nowDate);
+                Launch launch = launchService.getOne(lambdaQueryWrapper);
+                if (Objects.nonNull(launch)){
+                    Long launchId = launch.getId();
+                    LambdaQueryWrapper<LaunchRecord> lambdaQueryWrapper1 = new LambdaQueryWrapper<>();
+                    lambdaQueryWrapper1.eq(LaunchRecord::getLaunchId, launchId);
+                    lambdaQueryWrapper1.select(LaunchRecord::getLaunchPrice);
+                    List<LaunchRecord> list = launchRecordService.list(lambdaQueryWrapper1);
+                    for (LaunchRecord record : list){
+                        totalAmount = totalAmount.add(record.getLaunchPrice());
+                    }
+                }
+            }
+
             synchronizeAmount = totalAmount.multiply(totalRatio);
             feedBackAmount = synchronizeAmount.multiply(feedBackRatio);
             onSaleAmount = synchronizeAmount.multiply(onSaleRatio);
@@ -615,5 +648,26 @@ public class SpecificCronJobServiceImpl implements SpecificCronJobService {
                 adAuctionService.updateById(adAuction);
             }
         }
+    }
+
+    @Override
+    public void launchStart() {
+        LocalDateTime nowTime = LocalDateTime.now();
+        LocalDate nowDate = LocalDate.now();
+
+        for (int index = 0;index < launchSize; index ++){
+            Launch launch = new Launch();
+            launch.setId(IDUtil.nextId());
+            launch.setLaunchCount(launchCount);
+            launch.setLaunchDate(nowDate);
+            launch.setLaunchIndex(index);
+            launch.setLaunchMoment(nowTime.withHour(index).withMinute(0).withSecond(0).withNano(0));
+            launch.setLaunchPrice(defaultPrice);
+            launch.setDeclineRatio(declineRatio);
+            launch.setGmtCreated(nowTime);
+            launch.setGmtModified(nowTime);
+            launchService.save(launch);
+        }
+
     }
 }
