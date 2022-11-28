@@ -76,6 +76,7 @@ public class DailyTaskRecordServiceImpl extends ServiceImpl<DailyTaskRecordMappe
         record.setGmtModified(LocalDateTime.now());
         record.setUserId(userId);
         record.setTaskDate(LocalDate.now());
+        record.setTaskReward(rewardAmount);
 
         ChangeBalanceEntryRequest request = new ChangeBalanceEntryRequest();
         request.setAmount(rewardAmount);

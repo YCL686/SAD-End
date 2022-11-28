@@ -1,6 +1,8 @@
 package com.example.sharablead.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.io.Serializable;
@@ -33,6 +35,8 @@ public class DailyTaskRecord implements Serializable {
      * 任务日期
      */
     private LocalDate taskDate;
+
+    private BigDecimal taskReward;
 
     /**
      * 任务id

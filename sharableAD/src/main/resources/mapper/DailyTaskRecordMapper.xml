@@ -8,14 +8,14 @@
         <result column="user_id" property="userId" />
         <result column="task_date" property="taskDate" />
         <result column="task_id" property="taskId" />
-        <result column="task_status" property="taskStatus" />
+        <result column="task_reward" property="taskReward" />
         <result column="gmt_created" property="gmtCreated" />
         <result column="gmt_modified" property="gmtModified" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_id, task_date, task_id, task_status, gmt_created, gmt_modified
+        id, user_id, task_date, task_id, task_reward, gmt_created, gmt_modified
     </sql>
 
 </mapper>

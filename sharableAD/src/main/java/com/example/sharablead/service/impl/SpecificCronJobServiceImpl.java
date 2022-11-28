@@ -110,6 +110,9 @@ public class SpecificCronJobServiceImpl implements SpecificCronJobService {
     private DailyTaskConfigService dailyTaskConfigService;
 
     @Autowired
+    private DailyTaskRecordService dailyTaskRecordService;
+
+    @Autowired
     private RewardService rewardService;
 
     @Autowired
@@ -375,6 +378,16 @@ public class SpecificCronJobServiceImpl implements SpecificCronJobService {
                 }
             }
 
+            if (SynchronizeTypeEnum.DAILY_TASK.getCode() == config.getSynchronizeType()){
+                LambdaQueryWrapper<DailyTaskRecord> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+                lambdaQueryWrapper.eq(DailyTaskRecord::getTaskDate, nowDate);
+                lambdaQueryWrapper.select(DailyTaskRecord::getTaskReward);
+                List<DailyTaskRecord> list = dailyTaskRecordService.list(lambdaQueryWrapper);
+                for (DailyTaskRecord record : list){
+                    totalAmount = totalAmount.add(record.getTaskReward());
+                }
+            }
+
             //TODO daily-staking sync
             if (SynchronizeTypeEnum.DAILY_STAKING.getCode() == config.getSynchronizeType()) {
 
@@ -550,6 +563,10 @@ public class SpecificCronJobServiceImpl implements SpecificCronJobService {
                     adAuction.setTotalPrice(record.getAuctionTotalPrice().multiply(BigDecimal.valueOf(days)));
                     adAuction.setStatus(AdAuctionStatusEnum.SUCCESS.getCode());
                     adAuction.setDealPrice(record.getAuctionUnitPrice());
+
+                    record.setStatus(AdAuctionRecordStatusEnum.SUCCESS.getCode());
+                    record.setGmtModified(LocalDateTime.now());
+                    adAuctionRecordService.updateById(record);
                     //TODO token处理
                 } else { //流拍
                     LocalDateTime nextAuctionTime = nowDate.plusDays(1).atTime(0, 0, 0, 0);
