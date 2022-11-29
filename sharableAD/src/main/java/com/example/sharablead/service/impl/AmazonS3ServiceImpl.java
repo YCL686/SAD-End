@@ -22,6 +22,8 @@ import com.example.sharablead.enums.LikeStatusEnum;
 import com.example.sharablead.response.UploadVO;
 import com.example.sharablead.service.AdService;
 import com.example.sharablead.service.AmazonS3Service;
+import com.example.sharablead.service.LaunchRecordService;
+import com.example.sharablead.service.LaunchService;
 import com.example.sharablead.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -78,6 +80,9 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
     @Value("${amazon.s3.ad-file-path}")
     private String adFilePath;
 
+    @Value("${amazon.s3.launch-file-path}")
+    private String launchFilePath;
+
     @Value("${amazon.s3.video-file-path}")
     private String videoFilePath;
 
@@ -94,6 +99,12 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
 
     @Autowired
     private AdService adService;
+
+    @Autowired
+    private LaunchService launchService;
+
+    @Autowired
+    private LaunchRecordService launchRecordService;
 
     @Override
     public GlobalResponse upload(MultipartFile file) {
@@ -190,7 +201,43 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
 
         if (contentType.startsWith(IMAGE)){
             try {
-                MultipartFile resizeFile = FileUtil.resizeFile(file);
+                MultipartFile resizeFile = FileUtil.resizeFile(file, 350, 250);
+                long fileSize = resizeFile.getSize();
+                ObjectMetadata objectMetadata = new ObjectMetadata();
+                objectMetadata.setContentType(contentType);
+                objectMetadata.setContentLength(fileSize);
+                PutObjectResult putObjectResult = s3.putObject(tempBucketName, tempFileName, resizeFile.getInputStream(), objectMetadata);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return GlobalResponse.success(visitUrlPrefix + filePath);
+    }
+
+    @Override
+    public GlobalResponse uploadLaunch(MultipartFile file, Long userId) {
+        if (Objects.isNull(file) || StringUtils.isEmpty(file.getContentType())){
+            return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "invalid file");
+        }
+
+        if (!file.getContentType().startsWith(IMAGE)){
+            return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "unsupported file type");
+        }
+
+        if (file.getContentType().startsWith(IMAGE) && file.getSize() > 25165824){
+            return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "image file is over 3M");
+        }
+
+        String tempFileName = UUID.randomUUID().toString().replace("-", "") + "." + FilenameUtils.getExtension(file.getOriginalFilename());
+        String contentType = file.getContentType();
+        String dateDir = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String tempBucketName = bucketName + launchFilePath + dateDir;
+        String filePath = launchFilePath + dateDir + "/" + tempFileName;
+
+        if (contentType.startsWith(IMAGE)){
+            try {
+                MultipartFile resizeFile = FileUtil.resizeFile(file, 200, 200);
                 long fileSize = resizeFile.getSize();
                 ObjectMetadata objectMetadata = new ObjectMetadata();
                 objectMetadata.setContentType(contentType);

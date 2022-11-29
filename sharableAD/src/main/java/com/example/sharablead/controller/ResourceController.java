@@ -38,4 +38,11 @@ public class ResourceController {
         String token = request.getHeader("token");
         return amazonS3Service.uploadAd(file, tokenUtil.parseToken(token).getUserId());
     }
+
+    @ApiOperation(value = "uploadLaunch", notes = APISTR + "uploadLaunch")
+    @PostMapping(value = "/uploadLaunch")
+    public GlobalResponse uploadLaunch(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+        String token = request.getHeader("token");
+        return amazonS3Service.uploadLaunch(file, tokenUtil.parseToken(token).getUserId());
+    }
 }

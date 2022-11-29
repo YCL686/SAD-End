@@ -35,6 +35,8 @@ public class OpusVO {
 
     private LocalDateTime publishTime;
 
+    private String publishTimeString;
+
     private LocalDateTime gmtCreated;
 
     private LocalDateTime gmtModified;
@@ -66,5 +68,15 @@ public class OpusVO {
     private BigDecimal hotScore;
 
     private BigDecimal currentStakingAmount = BigDecimal.ZERO;
+
+    private Long launchId;
+
+    private String launchTitle;
+
+    private String launchDescription;
+
+    private String launchLink;
+
+    private String launchUrl;
 
 }

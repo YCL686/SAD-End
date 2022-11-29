@@ -8,4 +8,6 @@ public interface AmazonS3Service {
     GlobalResponse upload(MultipartFile file);
 
     GlobalResponse uploadAd(MultipartFile file, Long userId);
+
+    GlobalResponse uploadLaunch(MultipartFile file, Long userId);
 }

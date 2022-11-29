@@ -16,6 +16,7 @@ import com.example.sharablead.response.PageProfileOpusListResponse;
 import com.example.sharablead.response.PageProfileOpusVO;
 import com.example.sharablead.service.*;
 import com.example.sharablead.util.IDUtil;
+import com.example.sharablead.util.TimeUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -66,6 +67,12 @@ public class OpusServiceImpl extends ServiceImpl<OpusMapper, Opus> implements Op
     @Autowired
     private DailyStakingPoolService dailyStakingPoolService;
 
+    @Autowired
+    private LaunchRecordService launchRecordService;
+
+    @Autowired
+    private LaunchService launchService;
+
     @Override
     public GlobalResponse pageOpusList(long pageSize, long pageNo, int orderType, Long userId) {
         Page<Opus> page = new Page<>(pageNo, pageSize);
@@ -101,6 +108,7 @@ public class OpusServiceImpl extends ServiceImpl<OpusMapper, Opus> implements Op
                 result.getRecords().forEach(opus -> {
                 OpusVO vo = new OpusVO();
                 BeanUtils.copyProperties(opus, vo);
+                vo.setPublishTimeString(TimeUtil.getShortTime(vo.getPublishTime()));
                 vo.setNickName((CollectionUtils.isEmpty(map) || !map.containsKey(vo.getUserId()))?"":map.get(vo.getUserId()).getNickName());
                 vo.setAvatarUrl((CollectionUtils.isEmpty(map) || !map.containsKey(vo.getUserId()))?"":map.get(vo.getUserId()).getAvatarUrl());
                 vo.setCharacterSign((CollectionUtils.isEmpty(map) || !map.containsKey(vo.getUserId()))?"":map.get(vo.getUserId()).getCharacterSign());
@@ -172,6 +180,40 @@ public class OpusServiceImpl extends ServiceImpl<OpusMapper, Opus> implements Op
                 }
                 list.add(vo);
             });
+
+            //Launch Add
+            LocalDate nowDate = LocalDate.now();
+            LocalDateTime now = LocalDateTime.now().withMinute(0).withSecond(0).withNano(0);
+            LambdaQueryWrapper<Launch> lambdaQueryWrapper1 = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper1.eq(Launch::getLaunchDate, nowDate);
+            lambdaQueryWrapper1.eq(Launch::getLaunchMoment, now);
+            Launch launch = launchService.getOne(lambdaQueryWrapper1);
+            if (Objects.nonNull(launch)){
+                Long launchId = launch.getId();
+                LambdaQueryWrapper<LaunchRecord> lambdaQueryWrapper2 = new LambdaQueryWrapper<>();
+                lambdaQueryWrapper2.eq(LaunchRecord::getLaunchId, launchId);
+                List<LaunchRecord> list1 = launchRecordService.list(lambdaQueryWrapper2);
+                if (!CollectionUtils.isEmpty(list1)){
+                    int count = list1.size();
+                    Random rand = new Random();
+                    //index is in [0, count)
+                    int randomIndex = rand.nextInt(count);
+                    LaunchRecord record = list1.get(randomIndex);
+                    OpusVO launchVO = new OpusVO();
+                    launchVO.setLaunchTitle(record.getLaunchTitle());
+                    launchVO.setUserId(record.getUserId());
+                    launchVO.setLaunchDescription(record.getLaunchDescription());
+                    launchVO.setLaunchUrl(record.getLaunchUrl());
+                    launchVO.setLaunchLink(record.getLaunchLink());
+                    launchVO.setLaunchId(record.getLaunchId());
+                    User user = userService.getById(record.getUserId());
+                    if (Objects.nonNull(user)){
+                        launchVO.setNickName(user.getNickName());
+                        launchVO.setAvatarUrl(user.getAvatarUrl());
+                    }
+                    list.add(launchVO);
+                }
+            }
         }
 
         return GlobalResponse.success(list);

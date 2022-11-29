@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler({GlobalException.class})
     public GlobalResponse exceptionHandler(GlobalException exception){
-        log.error(exception.getMsg());
+        log.error(exception.getMessage());
 // 省略记录日志
         return new GlobalResponse(exception.getCode(), exception.getMsg(), null);
     }

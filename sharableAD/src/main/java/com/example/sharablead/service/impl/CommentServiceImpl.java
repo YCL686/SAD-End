@@ -17,6 +17,7 @@ import com.example.sharablead.response.CommentVO;
 import com.example.sharablead.response.PageCommentListResponse;
 import com.example.sharablead.service.*;
 import com.example.sharablead.util.IDUtil;
+import com.example.sharablead.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +94,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             Long toUserId = record.getToUserId();
             CommentVO commentVO = new CommentVO();
             BeanUtils.copyProperties(record, commentVO);
+
+            commentVO.setGmtCreatedString(TimeUtil.getShortTime(commentVO.getGmtCreated()));
+
             //From Info
             if (map.containsKey(fromUserId)){
                 commentVO.setFromNickName(map.get(fromUserId).getNickName());
@@ -214,6 +218,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             Long fromUserId = comment.getFromUserId();
             CommentVO vo = new CommentVO();
             BeanUtils.copyProperties(comment, vo);
+
+            vo.setGmtCreatedString(TimeUtil.getShortTime(vo.getGmtCreated()));
             //From Info
             if (map.containsKey(fromUserId)){
                 vo.setFromNickName(map.get(fromUserId).getNickName());

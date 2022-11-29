@@ -32,11 +32,11 @@ public class FileUtil {
         return new MockMultipartFile(Objects.requireNonNull(file.getOriginalFilename()), file.getOriginalFilename(), file.getContentType(), inputStream);
     }
 
-    public static MultipartFile resizeFile(MultipartFile file) throws IOException {
+    public static MultipartFile resizeFile(MultipartFile file, int l, int l1) throws IOException {
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Thumbnails.of(file.getInputStream())
-                .size(350, 250).keepAspectRatio(false)
+                .size(l, l1).keepAspectRatio(false)
                 .outputFormat("jpg")
                 .toOutputStream(outputStream);
         byte[] bytes = outputStream.toByteArray();

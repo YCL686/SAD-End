@@ -112,6 +112,7 @@ amazon:
     origin-file-path: /resource/origin/
     compress-file-path: /resource/compress/
     ad-file-path: /resource/ad/
+    launch-file-path: /resource/launch/
     video-file-path: /resource/video/
     visit-url-prefix: https://sad-bucket-dev.s3.ap-southeast-1.amazonaws.com
 

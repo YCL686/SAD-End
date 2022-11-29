@@ -38,7 +38,7 @@ public class DailyTaskRecordController {
     @Autowired
     private DailyTaskRecordService dailyTaskRecordService;
 
-    @ApiOperation(value = "operateFocus", notes = APISTR + "operateFocus")
+    @ApiOperation(value = "getDailyTaskReward", notes = APISTR + "getDailyTaskReward")
     @PostMapping("/getDailyTaskReward")
     @ApiOperationSupport(order = 1)
     public GlobalResponse getDailyTaskReward(HttpServletRequest httpServletRequest, @RequestBody GetDailyTaskRewardRequest getDailyTaskRewardRequest) {

@@ -33,6 +33,8 @@ public class CommentVO {
 
     private LocalDateTime gmtCreated;
 
+    private String gmtCreatedString;
+
     private Integer remainCommentNum = 0;
 
     private List<CommentVO> children;
