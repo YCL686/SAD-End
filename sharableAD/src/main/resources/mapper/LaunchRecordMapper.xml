@@ -6,6 +6,7 @@
     <resultMap id="BaseResultMap" type="com.example.sharablead.entity.LaunchRecord">
         <id column="id" property="id" />
         <result column="launch_id" property="launchId" />
+        <result column="launch_date" property="launchDate" />
         <result column="user_id" property="userId" />
         <result column="launch_price" property="launchPrice" />
         <result column="launch_title" property="launchTitle" />
@@ -18,7 +19,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, launch_id, user_id, launch_price, launch_title, launch_description, launch_link, launch_url, gmt_created, gmt_modified
+        id, launch_id, launch_date, user_id, launch_price, launch_title, launch_description, launch_link, launch_url, gmt_created, gmt_modified
     </sql>
 
 </mapper>

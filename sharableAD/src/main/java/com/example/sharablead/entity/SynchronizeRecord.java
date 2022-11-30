@@ -2,6 +2,8 @@ package com.example.sharablead.entity;
 
 import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.TableName;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 import lombok.Data;
@@ -25,6 +27,8 @@ public class SynchronizeRecord implements Serializable {
     private Long id;
 
     private Long synchronizeId;
+
+    private LocalDate synchronizeDate;
 
     private Integer synchronizeType;
 

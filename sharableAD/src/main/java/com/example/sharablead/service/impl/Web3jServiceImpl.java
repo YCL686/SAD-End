@@ -46,6 +46,12 @@ public class Web3jServiceImpl implements Web3jService {
     @Value("${web3.token.address}")
     private String tokenAddress;
 
+    @Value("${web3.token.bnb-address}")
+    private String bnbAddress;
+
+    @Value("${web3.token.swap-router}")
+    private String swapRouter;
+
     @Value("${web3.wallet.deposit-withdraw.address}")
     private String depositWithdrawAddress;
 
@@ -71,6 +77,8 @@ public class Web3jServiceImpl implements Web3jService {
     private static final String TRANSFER = "transfer";
 
     private static final String BALANCE_OF = "balanceOf";
+
+    private static final String GET_AMOUNTS_IN = "getAmountsIn";
 
     //链上交易成功状态值
     private static final String SUCCESS_STATUS = "0x1";
@@ -138,6 +146,60 @@ public class Web3jServiceImpl implements Web3jService {
     public GlobalResponse getBalanceOf(String fromAddress) {
         Web3j balanceOfWeb3j = Web3j.build(new HttpService(chainUrl));
         return balanceOf(balanceOfWeb3j, fromAddress);
+    }
+
+    @Override
+    public GlobalResponse getSwapPrice() {
+        GlobalResponse getGasPriceResponse = getGasPrice(depositWithdrawWeb3j);
+        if (getGasPrice(depositWithdrawWeb3j).getCode() == GlobalResponseEnum.SUCCESS.getCode()){
+            BigDecimal gasPrice = (BigDecimal) getGasPriceResponse.getData();
+
+            log.info("gasPrice: {}", gasPrice);
+
+            List<Type> inputParameters = new ArrayList<>();
+            List<TypeReference<?>> outputParameters = new ArrayList<>();
+
+            List<Address> list = new ArrayList<>();
+            list.add(new Address(tokenAddress));
+            list.add(new Address(bnbAddress));
+
+            inputParameters.add(new Uint256(10000000));
+            inputParameters.add((Type) list);
+
+            log.info(inputParameters.toString());
+
+            TypeReference<Uint256> typeReference = new TypeReference<>() {
+            };
+            outputParameters.add(typeReference);
+            Function function = new Function(GET_AMOUNTS_IN, inputParameters, outputParameters);
+            String data = FunctionEncoder.encode(function);
+            org.web3j.protocol.core.methods.request.Transaction transaction = Transaction.createEthCallTransaction("", swapRouter, data);
+            EthCall ethCall;
+            BigInteger balanceValue = BigInteger.ZERO;
+            try {
+                ethCall = depositWithdrawWeb3j.ethCall(transaction, DefaultBlockParameterName.LATEST).send();
+                List<Type> results = FunctionReturnDecoder.decode(ethCall.getValue(), function.getOutputParameters());
+                //balanceValue = (BigInteger) results.get(0).getValue();
+                return GlobalResponse.success(results);
+            } catch (IOException e) {
+                log.error("balanceOf: error = {}", e.getMessage());
+                return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), e.getMessage());
+            }
+
+        }
+        return GlobalResponse.error(GlobalResponseEnum.UNKNOWN_ERROR.getCode(), GlobalResponseEnum.UNKNOWN_ERROR.getMessage());
+    }
+
+    //TODO need implementation and fix bug
+    public GlobalResponse getGasPrice(Web3j web3j){
+        try {
+            EthGasPrice gasPrice = web3j.ethGasPrice().send();
+            log.info(gasPrice.getGasPrice().toString());
+            return GlobalResponse.success(new BigDecimal(gasPrice.getGasPrice().divide(new BigDecimal("10").pow(18).toBigInteger())).setScale(2, RoundingMode.HALF_DOWN));
+        }catch (Exception e){
+            log.error("getGasPrice error: {}", e.getMessage());
+            return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), e.getMessage());
+        }
     }
 
     public GlobalResponse transfer(Web3j web3j, Credentials credentials, String fromAddress, String toAddress, BigDecimal amount) {

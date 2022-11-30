@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -87,6 +88,7 @@ public class LaunchRecordServiceImpl extends ServiceImpl<LaunchRecordMapper, Lau
         LaunchRecord record = new LaunchRecord();
         record.setId(IDUtil.nextId());
         record.setLaunchId(launchId);
+        record.setLaunchDate(LocalDate.now());
         record.setUserId(userId);
         record.setLaunchLink(addLaunchRequest.getLaunchLink());
         record.setLaunchPrice(launch.getLaunchPrice());

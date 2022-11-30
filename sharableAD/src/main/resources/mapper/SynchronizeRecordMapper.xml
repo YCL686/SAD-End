@@ -6,6 +6,7 @@
     <resultMap id="BaseResultMap" type="com.example.sharablead.entity.SynchronizeRecord">
         <id column="id" property="id" />
         <result column="synchronize_id" property="synchronizeId" />
+        <result column="synchronize_date" property="synchronizeDate" />
         <result column="synchronize_type" property="synchronizeType" />
         <result column="synchronize_amount" property="synchronizeAmount" />
         <result column="total_ratio" property="totalRatio" />
@@ -31,7 +32,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, synchronize_id, synchronize_type, synchronize_amount, total_ratio, total_amount, feed_back_ratio, feed_back_amount, on_sale_ratio, on_sale_amount, burn_ratio, burn_amount, feed_back_tx_hash, on_sale_tx_hash, burn_tx_hash, feed_back_status, burn_status, on_sale_status, feed_back_memo, burn_memo, on_sale_memo, gmt_created, gmt_modified
+        id, synchronize_id, synchronize_date, synchronize_type, synchronize_amount, total_ratio, total_amount, feed_back_ratio, feed_back_amount, on_sale_ratio, on_sale_amount, burn_ratio, burn_amount, feed_back_tx_hash, on_sale_tx_hash, burn_tx_hash, feed_back_status, burn_status, on_sale_status, feed_back_memo, burn_memo, on_sale_memo, gmt_created, gmt_modified
     </sql>
 
 </mapper>

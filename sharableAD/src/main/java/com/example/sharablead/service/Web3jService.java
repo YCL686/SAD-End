@@ -11,4 +11,6 @@ public interface Web3jService {
     GlobalResponse synchronize(String fromAddress, String toAddress, BigDecimal amount);
 
     GlobalResponse getBalanceOf(String fromAddress);
+
+    GlobalResponse getSwapPrice();
 }

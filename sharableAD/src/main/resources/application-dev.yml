@@ -129,8 +129,10 @@ web3:
     id: 97
   token:
     address: '0x8b1C1a86F23E6fb22DeaF2Ce04AC7500FC0BBa8C'
+    bnb-address: '0xae13d989dac2f0debff460ac112a837c89baa7cd'
     owner: '0x912379C36D054913AF29cCBadd2Fd5251110bd0e'
     owner-private-key: '123'
+    swap-router: '0x9ac64cc6e4415144c455bd8e4837fea55603e5c3'
   wallet:
    on-sale:
      address: '0x1675cC4B278469DcC0F10f74aA6cAE5c82DE42D9'

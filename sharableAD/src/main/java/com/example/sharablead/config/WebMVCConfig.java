@@ -52,6 +52,7 @@ public class WebMVCConfig implements WebMvcConfigurer {
                         "/swagger-resources/**",
                         "/swagger-ui.html/**",
                         "/doc.html",
+                        "/test/**",
                         "/webjars/**"); //排除请求
 
     }

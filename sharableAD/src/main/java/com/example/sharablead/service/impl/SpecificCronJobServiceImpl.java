@@ -364,10 +364,10 @@ public class SpecificCronJobServiceImpl implements SpecificCronJobService {
             BigDecimal burnAmount = BigDecimal.ZERO;
 
             LambdaQueryWrapper<SynchronizeRecord> synchronizeRecordLambdaQueryWrapper = new LambdaQueryWrapper<>();
-            synchronizeRecordLambdaQueryWrapper.eq(SynchronizeRecord::getSynchronizeId, synchronize.getId());
+            synchronizeRecordLambdaQueryWrapper.eq(SynchronizeRecord::getSynchronizeDate, nowDate);
             synchronizeRecordLambdaQueryWrapper.eq(SynchronizeRecord::getSynchronizeType, config.getSynchronizeType());
             if (synchronizeRecordService.count(synchronizeRecordLambdaQueryWrapper) > 0){
-                log.error("syncWallet: synchronize record already exist, nowDate = {}, synchronizeId = {}, synchronizeType = {}", nowDate, synchronize.getId(), config.getSynchronizeType());
+                log.error("syncWallet: synchronize record already exist, nowDate = {}, synchronizeType = {}", nowDate, config.getSynchronizeType());
                 continue;
             }
             //reward sync
@@ -416,19 +416,13 @@ public class SpecificCronJobServiceImpl implements SpecificCronJobService {
             }
 
             if (SynchronizeTypeEnum.LAUNCH.getCode() == config.getSynchronizeType()){
-                LambdaQueryWrapper<Launch> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-                lambdaQueryWrapper.eq(Launch::getLaunchDate, nowDate);
-                Launch launch = launchService.getOne(lambdaQueryWrapper);
-                if (Objects.nonNull(launch)){
-                    Long launchId = launch.getId();
                     LambdaQueryWrapper<LaunchRecord> lambdaQueryWrapper1 = new LambdaQueryWrapper<>();
-                    lambdaQueryWrapper1.eq(LaunchRecord::getLaunchId, launchId);
+                    lambdaQueryWrapper1.eq(LaunchRecord::getLaunchDate, nowDate);
                     lambdaQueryWrapper1.select(LaunchRecord::getLaunchPrice);
                     List<LaunchRecord> list = launchRecordService.list(lambdaQueryWrapper1);
                     for (LaunchRecord record : list){
                         totalAmount = totalAmount.add(record.getLaunchPrice());
                     }
-                }
             }
 
             synchronizeAmount = totalAmount.multiply(totalRatio);
@@ -443,6 +437,7 @@ public class SpecificCronJobServiceImpl implements SpecificCronJobService {
             synchronizeRecord.setTotalRatio(totalRatio);
             synchronizeRecord.setTotalAmount(totalAmount);
             synchronizeRecord.setSynchronizeId(synchronize.getId());
+            synchronizeRecord.setSynchronizeDate(nowDate);
             synchronizeRecord.setSynchronizeType(config.getSynchronizeType());
             synchronizeRecord.setFeedBackAmount(feedBackAmount);
             synchronizeRecord.setBurnAmount(burnAmount);
@@ -654,6 +649,12 @@ public class SpecificCronJobServiceImpl implements SpecificCronJobService {
     public void launchStart() {
         LocalDateTime nowTime = LocalDateTime.now();
         LocalDate nowDate = LocalDate.now();
+
+        LambdaQueryWrapper<Launch> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Launch::getLaunchDate, nowDate);
+        if (launchService.count(lambdaQueryWrapper) > 0){
+            return;
+        }
 
         for (int index = 0;index < launchSize; index ++){
             Launch launch = new Launch();
