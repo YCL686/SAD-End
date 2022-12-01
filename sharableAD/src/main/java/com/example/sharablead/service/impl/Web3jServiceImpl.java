@@ -207,6 +207,7 @@ public class Web3jServiceImpl implements Web3jService {
         try {
             ethGetTransactionCount = web3j.ethGetTransactionCount(fromAddress, DefaultBlockParameterName.LATEST).sendAsync().get();
         } catch (InterruptedException | ExecutionException e) {
+            log.error("TRANSFER: get nonce error: {}", e.getMessage());
             return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "get nonce error");
         }
         BigInteger nonce = ethGetTransactionCount.getTransactionCount();
@@ -217,6 +218,7 @@ public class Web3jServiceImpl implements Web3jService {
         try {
             ethGasPrice = web3j.ethGasPrice().sendAsync().get();
         } catch (InterruptedException | ExecutionException e) {
+            log.error("TRANSFER: get gasPrice error: {}", e.getMessage());
             return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "get gasPrice error");
         }
         gasPrice = ethGasPrice.getGasPrice();
@@ -237,6 +239,7 @@ public class Web3jServiceImpl implements Web3jService {
         try {
             ethSendTransaction = web3j.ethSendRawTransaction(hexValue).sendAsync().get();
         } catch (InterruptedException | ExecutionException e) {
+            log.error("TRANSFER: send transaction error: {}", e.getMessage());
             return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "send transaction error");
         }
 
@@ -246,7 +249,8 @@ public class Web3jServiceImpl implements Web3jService {
         try {
             transactionReceipt = web3j.ethGetTransactionReceipt(transactionHash).sendAsync().get();
         } catch (InterruptedException | ExecutionException e) {
-            log.error("get transactionReceipt error");
+            log.error("TRANSFER: query transaction error: {}", e.getMessage());
+            return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "query transaction error");
         }
         receipt = transactionReceipt.getResult();
         String status = Objects.isNull(receipt) ? INIT_STATUS : receipt.getStatus();
@@ -257,18 +261,18 @@ public class Web3jServiceImpl implements Web3jService {
                 try {
                     transactionReceipt = web3j.ethGetTransactionReceipt(transactionHash).sendAsync().get();
                 } catch (InterruptedException | ExecutionException e) {
-                    log.error("get transactionReceipt error");
-                    return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "get transactionReceipt error");
+                    log.error("TRANSFER: query transaction error: {}",e.getMessage());
+                    return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "query transaction error");
                 }
                 receipt = transactionReceipt.getResult();
                 status = Objects.isNull(receipt) ? INIT_STATUS : receipt.getStatus();
             } catch (InterruptedException e) {
-                log.error("get sleep error");
+                log.error("TRANSFER: get sleep error: {}", e.getMessage());
                 return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "get sleep error");
             }
         }
         if (FAIL_STATUS.equals(status)) {
-            log.error("transaction error, txHash = {}", transactionHash);
+            log.error("TRANSFER: transfer error: {}", transactionHash);
             return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "transaction error, txHash = " + transactionHash);
         }
         return GlobalResponse.success(transactionHash);

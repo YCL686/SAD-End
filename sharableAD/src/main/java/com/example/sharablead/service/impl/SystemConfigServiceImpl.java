@@ -42,7 +42,7 @@ public class SystemConfigServiceImpl extends ServiceImpl<SystemConfigMapper, Sys
     /*
      * @将数据库查询出来的数据存入map和redis
      */
-    @PostConstruct
+    //@PostConstruct
     public void loadInRedis() {
         Map<String, String> config = initConfigMap();
         config.forEach((key, value) -> {

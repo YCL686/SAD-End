@@ -9,9 +9,9 @@ public class JasyptTest {
     @Test
     public void test() {
         //your password
-        System.setProperty("jasypt.encryptor.password", "xxx");
+        System.setProperty("jasypt.encryptor.password", "");
         StringEncryptor stringEncryptor = new DefaultLazyEncryptor(new StandardEnvironment());
-        String originStr = "xxx";
+        String originStr = "";
         String encyptStr = stringEncryptor.encrypt(originStr);
         System.out.println("origin： " + originStr);
         System.out.println("encypt： " + encyptStr);
