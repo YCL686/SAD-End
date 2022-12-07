@@ -242,7 +242,6 @@ public class Web3jServiceImpl implements Web3jService {
             log.error("TRANSFER: send transaction error: {}", e.getMessage());
             return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "send transaction error");
         }
-
         String transactionHash = ethSendTransaction.getTransactionHash();
         EthGetTransactionReceipt transactionReceipt = null;
         TransactionReceipt receipt = null;
