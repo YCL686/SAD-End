@@ -376,7 +376,7 @@ public class SpecificCronJobServiceImpl implements SpecificCronJobService {
                 lambdaQueryWrapper.select(Reward::getAmount);
                 lambdaQueryWrapper.eq(Reward::getRewardDate, nowDate);
                 lambdaQueryWrapper.eq(Reward::getSynchronizeFlag, SynchronizedFlagEnum.OUT_OF_SYNCHRONIZED.getCode());
-                //TODO now is query all the data, it needs to pagination later
+                //TODO now is query all the data, it needs to pagination later with the increase of data size
                 List<Reward> list = rewardService.list(lambdaQueryWrapper);
                 for (Reward reward : list) {
                     totalAmount = totalAmount.add(reward.getAmount());
