@@ -9,6 +9,12 @@ spring:
     activate:
       on-profile:
         dev
+  rabbitmq:
+    host: ENC(eb8ZykeUvYkPpFF33okJdDwOOlmbMISPxlSNohQsld9awBN4MVzKWXSnLx2Vo4b1GPybbvWmdzko4LmeesQRWp9wtDG1SrQrdWkPZDFiM+6LbDIIs4Rv3sk9fRXS3kGXt4fXDASM27HbwdprnxDVUA==)
+    port: 5671
+    username: ENC(+Rj/EZxIJIKCSUOY3j/1Jz2iBCUrNYKFsgrUUljkfOQLh/rs/mjXuxf/ukUXlF1O)
+    password: ENC(CSWFr2MV2U9y1QD4mxt/qomvTaONRe3S0rTXt/SZ6SwSAbzR0SxOJ+Zjit6mBR+L)
+    virtual-host: dev
   redis:
     host: ENC(D3WkXy2OkGYrdsHBhIy1DuRxXK4Ki3vlIGIYB5TdjbnfC75DHaMsi8wO6ZxQRho7)
     port: 6379

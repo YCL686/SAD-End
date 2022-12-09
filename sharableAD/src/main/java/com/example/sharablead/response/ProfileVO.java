@@ -37,6 +37,8 @@ public class ProfileVO {
 
     private Long commentNum;
 
+    private Long collectNum;
+
     private LocalDateTime gmtCreated;
 
 //    //TA的创作

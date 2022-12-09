@@ -95,7 +95,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             user.setNickName(shortenAddress);
             user.setShortenAddress(shortenAddress);
             user.setRole(AppConstant.APP_NORMAL_MEMBER_ROLE_NAME);
-            user.setStatus(0);
+            user.setStatus(UserStatusEnum.NORMAL.getCode());
             user.setGmtCreated(LocalDateTime.now());
             user.setGmtModified(LocalDateTime.now());
             userMapper.insert(user);
@@ -203,6 +203,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         lambdaQueryWrapper4.eq(Opus::getUserId, userId);
         lambdaQueryWrapper4.eq(Opus::getStatus, OpusStatusEnum.NORMAL.getCode());
         vo.setOpusNum(opusService.count(lambdaQueryWrapper4));
+
+        LambdaQueryWrapper<Collect> lambdaQueryWrapper5 = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper5.eq(Collect::getUserId, userId);
+        lambdaQueryWrapper5.eq(Collect::getStatus, CollectStatusEnum.NORMAL.getCode());
+        vo.setCollectNum(collectService.count(lambdaQueryWrapper5));
 
         return GlobalResponse.success(vo);
     }
