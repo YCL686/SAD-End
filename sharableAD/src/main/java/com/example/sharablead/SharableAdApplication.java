@@ -16,7 +16,7 @@ public class SharableAdApplication {
 
 	private ThreadPoolTaskScheduler taskScheduler = null;
 
-	//初始化定时任务线程池
+	//initialize thread pool for cron job
 	@Bean
 	public ThreadPoolTaskScheduler initTaskScheduler() {
 		if (taskScheduler != null) {
