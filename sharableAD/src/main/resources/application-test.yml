@@ -15,6 +15,8 @@ spring:
     username: ENC(AqxZAp6PFtVZhMoaN3jlITbsQmDnDnPl1ydHpsJW25JhGdKOj32g2hr6z9z2cjxW)
     password: ENC(D3Ud6LeXS3OxjdTwdRvi400jobWyWGbtIg4hGVIH8HW46i4F29UEayroaVVTgGz3)
     virtual-host: test
+    ssl:
+      enabled: true
   redis:
     host: ENC(D3WkXy2OkGYrdsHBhIy1DuRxXK4Ki3vlIGIYB5TdjbnfC75DHaMsi8wO6ZxQRho7)
     port: 6379
