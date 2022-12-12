@@ -10,10 +10,10 @@ spring:
       on-profile:
         test
   rabbitmq:
-    host: ENC(eb8ZykeUvYkPpFF33okJdDwOOlmbMISPxlSNohQsld9awBN4MVzKWXSnLx2Vo4b1GPybbvWmdzko4LmeesQRWp9wtDG1SrQrdWkPZDFiM+6LbDIIs4Rv3sk9fRXS3kGXt4fXDASM27HbwdprnxDVUA==)
+    host: ENC(jEEOaawxQqr80AfhvH82bLFWwzNG8UymgUGf46HJfm2Pw+8OoJ/+v2JPRJYJG5oMp8KK3SZQleNF5kP6zbcHOzNU6HN9fgnacCV019c8xP3kn4XU3GuitRy9L34VFevwE+fXoNEKWUGCk7u9AGe4TQ==)
     port: 5671
-    username: ENC(CB5swQrQ7G91KgaCEejITLS+NIs0AgpomAGHG2d0+fzDbR2d/5kiCSfxm7z7rDMk)
-    password: ENC(CSWFr2MV2U9y1QD4mxt/qomvTaONRe3S0rTXt/SZ6SwSAbzR0SxOJ+Zjit6mBR+L)
+    username: ENC(AqxZAp6PFtVZhMoaN3jlITbsQmDnDnPl1ydHpsJW25JhGdKOj32g2hr6z9z2cjxW)
+    password: ENC(D3Ud6LeXS3OxjdTwdRvi400jobWyWGbtIg4hGVIH8HW46i4F29UEayroaVVTgGz3)
     virtual-host: test
   redis:
     host: ENC(D3WkXy2OkGYrdsHBhIy1DuRxXK4Ki3vlIGIYB5TdjbnfC75DHaMsi8wO6ZxQRho7)
