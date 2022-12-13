@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public class FileUtil {
     /**
-     * 压缩文件
+     * compress file
      * @param file
      * @return
      */
@@ -42,11 +42,5 @@ public class FileUtil {
         byte[] bytes = outputStream.toByteArray();
         InputStream inputStream = new ByteArrayInputStream(bytes);
         return new MockMultipartFile(Objects.requireNonNull(file.getOriginalFilename()), file.getOriginalFilename(), file.getContentType(), inputStream);
-    }
-
-    public static void main(String args[]) throws IOException {
-        File file = new File("C:\\Users\\JC0648\\Desktop\\test.jpg");
-        Thumbnails.Builder<File> builder = Thumbnails.of(file);
-        builder.outputQuality(0.1).size(1601,2425).toFile("test1.jpg");
     }
 }

@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Objects;
 
@@ -38,8 +39,8 @@ private RedisUtil redisUtil;
         claims.setClaim("userId", token.getUserId());
         claims.setClaim("address", token.getAddress());
         claims.setClaim("roleNames", token.getRoleNames());
-        //3天有效
-        claims.setExpirationTimeMinutesInTheFuture(60*24*3);
+        //token is valid in 7 days and wont renew
+        claims.setExpirationTimeMinutesInTheFuture(60*24*7);
 
         Key key = null;
         try {
@@ -73,11 +74,7 @@ private RedisUtil redisUtil;
             throw new TokenException(GlobalResponseEnum.TOKEN_ERROR.getCode(),"token is null");
         }
         Key key = null;
-        try {
-            key = new HmacKey(secretKey.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("key parse error");
-        }
+        key = new HmacKey(secretKey.getBytes(StandardCharsets.UTF_8));
         JwtConsumer jwtConsumer = new JwtConsumerBuilder()
                 .setRequireExpirationTime()
                 .setAllowedClockSkewInSeconds(30)
@@ -92,7 +89,7 @@ private RedisUtil redisUtil;
             throw new TokenException(GlobalResponseEnum.TOKEN_ERROR.getCode(),"token parse error");
         }
         String userId = processedClaims.getClaimValue("userId").toString();
-        //redis不存在token缓存
+        //token cache does not exist
         if (Objects.isNull(redisUtil.get(userId))){
             throw new TokenException(GlobalResponseEnum.TOKEN_ERROR.getCode(), "token is invalid");
         }
@@ -106,11 +103,7 @@ private RedisUtil redisUtil;
             throw new TokenException(GlobalResponseEnum.TOKEN_ERROR.getCode(),"token is null");
         }
         Key key = null;
-        try {
-            key = new HmacKey(secretKey.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new TokenException(GlobalResponseEnum.TOKEN_ERROR.getCode(),"key parse error");
-        }
+        key = new HmacKey(secretKey.getBytes(StandardCharsets.UTF_8));
         JwtConsumer jwtConsumer = new JwtConsumerBuilder()
                 .setRequireExpirationTime()
                 .setAllowedClockSkewInSeconds(30)
@@ -125,8 +118,8 @@ private RedisUtil redisUtil;
             throw new TokenException(GlobalResponseEnum.TOKEN_ERROR.getCode(),"token parse error");
         }
         String userId = processedClaims.getClaimValue("userId").toString();
-        //redis不存在token缓存
-        if (Objects.isNull(redisUtil.get(userId).toString())){
+        //token cache does not exist
+        if (Objects.isNull(redisUtil.get(userId))){
             throw new TokenException(GlobalResponseEnum.TOKEN_ERROR.getCode(), "token is invalid");
         }
         Token myToken = new Token();

@@ -18,14 +18,13 @@ import java.util.Arrays;
 @Slf4j
 public class SignCheckUtil {
     /**
-     * 以太坊自定义的签名消息都以以下字符开头
-     * 参考 eth_sign in https://github.com/ethereum/wiki/wiki/JSON-RPC
+     * refer to eth_sign in https://github.com/ethereum/wiki/wiki/JSON-RPC
      */
     public static final String PERSONAL_MESSAGE_PREFIX = "\u0019Ethereum Signed Message:\n";
 
     public static final String MESSAGE = "Signing in to SharableAD";
     /**
-     * 对签名消息，原始消息，账号地址三项信息进行认证，判断签名是否有效
+     * check signature is valid
      * @param signature
      * @param address
      * @return
