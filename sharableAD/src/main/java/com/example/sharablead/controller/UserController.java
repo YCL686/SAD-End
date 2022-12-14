@@ -12,6 +12,7 @@ import com.example.sharablead.service.UserService;
 import com.example.sharablead.util.TokenUtil;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author inncore
  * @since 2022-09-28
  */
+@Slf4j
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -105,6 +107,20 @@ public class UserController {
     @GetMapping("getMentionedList")
     public GlobalResponse getMentionedList(@RequestParam(value = "key", defaultValue = "0") String key){
         return userService.getMentionedList(key);
+    }
+
+    @ApiOperation(value = "getDotCount", notes = APISTR + "getDotCount")
+    @GetMapping("/getDotCount")
+    @ApiOperationSupport(order = 1)
+    public GlobalResponse getDotCount(HttpServletRequest httpServletRequest) {
+        String token = httpServletRequest.getHeader("token");
+        Long userId = 0L;
+        try {
+            userId = tokenUtil.parseToken(token).getUserId();
+        }catch (Exception e){
+            log.info("getDotCount: not logged");
+        }
+        return userService.getDotCount(userId);
     }
 
 }

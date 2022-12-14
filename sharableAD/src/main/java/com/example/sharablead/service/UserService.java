@@ -11,7 +11,7 @@ import java.util.Map;
 
 /**
  * <p>
- *  服务类
+ *  service interface
  * </p>
  *
  * @author inncore
@@ -29,4 +29,6 @@ public interface UserService extends IService<User> {
     GlobalResponse getProFile(boolean self, Long userId);
 
     GlobalResponse getMentionedList(String key);
+
+    GlobalResponse getDotCount(Long userId);
 }

@@ -12,9 +12,7 @@ import com.example.sharablead.request.GenerateTokenRequest;
 import com.example.sharablead.mapper.UserMapper;
 
 import com.example.sharablead.request.LoginRequest;
-import com.example.sharablead.response.LoginResponse;
-import com.example.sharablead.response.MentionedVO;
-import com.example.sharablead.response.ProfileVO;
+import com.example.sharablead.response.*;
 import com.example.sharablead.service.*;
 import com.example.sharablead.util.IDUtil;
 import com.example.sharablead.util.RedisUtil;
@@ -25,7 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 
 /**
  * <p>
- *  服务实现类
+ * service implementation
  * </p>
  *
  * @author inncore
@@ -72,6 +72,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private RoleService roleService;
 
+    @Resource
+    private DailyTaskConfigService dailyTaskConfigService;
+
+    @Resource
+    private DailyTaskRecordService dailyTaskRecordService;
+
     @Override
     public GlobalResponse login(LoginRequest loginRequest) {
         String message = loginRequest.getMessage();
@@ -83,11 +89,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         lambdaQueryWrapper.eq(User::getAddress, address);
         User user = userMapper.selectOne(lambdaQueryWrapper);
         GenerateTokenRequest generateTokenRequest = new GenerateTokenRequest();
-        if (!SignCheckUtil.validate(signature, address, message)){
+        if (!SignCheckUtil.validate(signature, address, message)) {
             return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "invalid sign");
         }
-        //首次登录即注册
-        Long userId = Objects.isNull(user)? IDUtil.nextId() : user.getId();
+        //first login as register
+        Long userId = Objects.isNull(user) ? IDUtil.nextId() : user.getId();
         if (Objects.isNull(user)) {
             user = new User();
             user.setId(userId);
@@ -131,7 +137,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Token myToken = tokenUtil.parseToken(token);
         Long userId = myToken.getUserId();
         User user = userMapper.selectById(userId);
-        if (Objects.isNull(user)){
+        if (Objects.isNull(user)) {
             return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), GlobalResponseEnum.ERROR.getMessage());
         }
         redisUtil.remove(userId.toString());
@@ -141,13 +147,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Map<Long, User> getUserMap(List<Long> ids) {
         Map<Long, User> map = new HashMap<>();
-        if (CollectionUtils.isEmpty(ids)){
+        if (CollectionUtils.isEmpty(ids)) {
             return map;
         }
         LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.in(User::getId, ids);
         List<User> list = userMapper.selectList(lambdaQueryWrapper);
-        if (CollectionUtils.isEmpty(list)){
+        if (CollectionUtils.isEmpty(list)) {
             return map;
         }
 
@@ -160,7 +166,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         User user = userMapper.selectById(userId);
         //TODO status check
-        if (Objects.isNull(user)){
+        if (Objects.isNull(user)) {
             return GlobalResponse.error(GlobalResponseEnum.ERROR.getCode(), "invalid userId");
         }
 
@@ -173,32 +179,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         vo.setSelf(self);
         vo.setGmtCreated(user.getGmtCreated());
 
-        //被点赞数
+        //liked nums
         LambdaQueryWrapper<Like> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Like::getLikedId, userId);
         vo.setLikedNum(likeService.count(lambdaQueryWrapper));
 
-        //关注我的数 即fans数
+        //focused nums
         LambdaQueryWrapper<Focus> lambdaQueryWrapper1 = new LambdaQueryWrapper<>();
         lambdaQueryWrapper1.eq(Focus::getFocusedId, userId);
         lambdaQueryWrapper1.eq(Focus::getStatus, FocusStatusEnum.NORMAL.getCode());
         vo.setFocusedNum(focusService.count(lambdaQueryWrapper1));
 
-        //我关注的数
+        //focus nums
         LambdaQueryWrapper<Focus> lambdaQueryWrapper2 = new LambdaQueryWrapper<>();
         lambdaQueryWrapper2.eq(Focus::getUserId, userId);
         lambdaQueryWrapper2.eq(Focus::getStatus, FocusStatusEnum.NORMAL.getCode());
         vo.setFocusNum(focusService.count(lambdaQueryWrapper2));
 
-        //评论数
+        //comment nums
         LambdaQueryWrapper<Comment> lambdaQueryWrapper3 = new LambdaQueryWrapper<>();
         lambdaQueryWrapper3.eq(Comment::getFromUserId, userId);
-        if (!self){
+        if (!self) {
             lambdaQueryWrapper3.eq(Comment::getStatus, CommentStatusEnum.NORMAL.getCode());
         }
         vo.setCommentNum(commentService.count(lambdaQueryWrapper3));
 
-        //作品数
+        //opus nums
         LambdaQueryWrapper<Opus> lambdaQueryWrapper4 = new LambdaQueryWrapper<>();
         lambdaQueryWrapper4.eq(Opus::getUserId, userId);
         lambdaQueryWrapper4.eq(Opus::getStatus, OpusStatusEnum.NORMAL.getCode());
@@ -216,7 +222,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public GlobalResponse getMentionedList(String key) {
         List<MentionedVO> list = new ArrayList<>();
 
-        if (StringUtils.isEmpty(key)){
+        if (StringUtils.isEmpty(key)) {
             return GlobalResponse.success(list);
         }
 
@@ -226,16 +232,42 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         lambdaQueryWrapper.select(User::getId, User::getNickName);
         List<User> list1 = userMapper.selectList(lambdaQueryWrapper);
 
-        if (CollectionUtils.isEmpty(list1)){
+        if (CollectionUtils.isEmpty(list1)) {
             return GlobalResponse.success(list);
         }
 
-        list1.forEach(user->{
+        list1.forEach(user -> {
             MentionedVO vo = new MentionedVO();
             BeanUtils.copyProperties(user, vo);
             list.add(vo);
         });
 
         return GlobalResponse.success(list);
+    }
+
+    @Override
+    public GlobalResponse getDotCount(Long userId) {
+        GetDotCountVO vo = new GetDotCountVO();
+
+        LambdaQueryWrapper<DailyTaskConfig> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.select(DailyTaskConfig::getId);
+        lambdaQueryWrapper.eq(DailyTaskConfig::getTaskStatus, DailyTaskConfigStatusEnum.ONLINE.getCode());
+        List<DailyTaskConfig> list = dailyTaskConfigService.list(lambdaQueryWrapper);
+        vo.setUnfinishedDailyTaskCount(list.size());
+
+        if (userId != 0L) {
+            for (DailyTaskConfig config : list) {
+                LambdaQueryWrapper<DailyTaskRecord> lambdaQueryWrapper1 = new LambdaQueryWrapper<>();
+                lambdaQueryWrapper1.eq(DailyTaskRecord::getTaskId, config.getId());
+                lambdaQueryWrapper1.eq(DailyTaskRecord::getUserId, userId);
+                lambdaQueryWrapper1.eq(DailyTaskRecord::getTaskDate, LocalDate.now());
+                if (dailyTaskRecordService.count(lambdaQueryWrapper1) == 1) {
+                    vo.setUnfinishedDailyTaskCount(vo.getUnfinishedDailyTaskCount() - 1);
+                }
+            }
+            //TODO unreadMessageCount
+        }
+
+        return GlobalResponse.success(vo);
     }
 }
