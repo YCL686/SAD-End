@@ -156,8 +156,18 @@ web3:
       address: '0x2edeFd2591a6C4F418d30c6b8a21843f1Cb19dd2'
       private-key: ENC(CczQIPL+ODiO6ZiYPJXFSlbdXvYkE+hLBJdjR2ur1VdMqkrVIntEpz1SwqMcU/oaPg87p+MFElMEjlmRg7+pH00SL2OzRiRfHbQPCqzuhZRCbQJRrblCpvcSFmy/BbjFz74EupX+bRVE45EEt4S8wQ==)
     nft:
-      owner: '0xCD6F36a538659F42df5e58663582b9952212Fecf'
-      owner-private-key: ENC(qSb96zi+2sTC1Px960+oIdG4eTiE2Va7yNPCeemqY4qUgPPdNG4qG520Mqx+8h7RCCVo+0nBWg1xbmNtXGSzB0z4hVg23yWQ7qSjACwvdTgEBXv99QBBVriierfWAnzclSxhGad4+eQBp+wtY0HeJw==)
+      avatar:
+        contract-address: 0xd8DBA2adf6588c9e2e1b8fAC481B0d9a480ffc9c
+        owner: '0xCD6F36a538659F42df5e58663582b9952212Fecf'
+        owner-private-key: ENC(qSb96zi+2sTC1Px960+oIdG4eTiE2Va7yNPCeemqY4qUgPPdNG4qG520Mqx+8h7RCCVo+0nBWg1xbmNtXGSzB0z4hVg23yWQ7qSjACwvdTgEBXv99QBBVriierfWAnzclSxhGad4+eQBp+wtY0HeJw==)
+      opus:
+        contract-address: xxx
+        owner: xxx
+        owner-private-key: xxx
+      badge:
+        contract-address: xxx
+        owner: xxx
+        owner-private-key: xxx
       deposit:
         address: '0x096F4e1c45b64b68cF5b4eF2CD20E50CA248929a'
         private-key: ENC(9drdOYfG8Ci00aMpBWY2kwz/R2l/hxiDgIGgcFoxMnAjf/O9mzhJNWiYiELBj0jPm6Bok5ysZAw2su8esLSuudvjo6rbxVtPoN5KkZ2242IuvW7dwMhswLFsaQdrpdDSlLIURxyzRfUQFYGckhf/Rg==)

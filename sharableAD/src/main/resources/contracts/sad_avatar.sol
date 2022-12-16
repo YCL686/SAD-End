@@ -19,6 +19,8 @@ contract MyNFT is ERC721, ERC721Enumerable, Ownable {
     //开启售卖nft
     bool public _isSaleActive = false;
 
+    bool public _isTransferActive = false;
+
     // Constants
     //设置NFT数量
     uint256 public constant MAX_SUPPLY = 8888;
@@ -33,6 +35,8 @@ contract MyNFT is ERC721, ERC721Enumerable, Ownable {
     string private _baseURIExtended;
 
     event TokenMinted(uint256 supply);
+    event StartTransfer();
+    event StopTransfer();
     event SaleStarted();
     event SalePaused();
     event WhitelistActive();
@@ -41,8 +45,8 @@ contract MyNFT is ERC721, ERC721Enumerable, Ownable {
     constructor() ERC721("SAD_AVATAR", "SADA") {}
 
     //判断是否在白名单
-    function getWhiteList() public view returns (bool){
-        return whitelist[msg.sender];
+    function isInWhitelist(address now) public view returns (bool){
+        return whitelist[now];
     }
 
     //获取白名单状态
@@ -53,6 +57,23 @@ contract MyNFT is ERC721, ERC721Enumerable, Ownable {
     //获取预售开关状态
     function getSaleActive() public view returns (bool){
         return _isSaleActive;
+    }
+
+    //获取转移状态
+    function getTransferActive() public view returns (bool){
+        return _isTransferActive;
+    }
+
+    //开启转移
+    function startTransfer() public onlyOwner {
+        _isTransferActive = true;
+        emit StartTransfer();
+    }
+
+    //关闭转移
+    function stopTransfer() public onlyOwner {
+        _isTransferActive = false;
+        emit StopTransfer();
     }
 
     //开始预售
@@ -189,6 +210,7 @@ contract MyNFT is ERC721, ERC721Enumerable, Ownable {
         address to,
         uint256 tokenId,
         uint256 batchSize) internal override(ERC721, ERC721Enumerable) {
+        require(_isTransferActive, "Transfer is not active");
         super._beforeTokenTransfer(from, to, tokenId, 1);
     }
 
