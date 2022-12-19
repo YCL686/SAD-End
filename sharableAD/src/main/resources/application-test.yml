@@ -157,7 +157,7 @@ web3:
       private-key: ENC(CczQIPL+ODiO6ZiYPJXFSlbdXvYkE+hLBJdjR2ur1VdMqkrVIntEpz1SwqMcU/oaPg87p+MFElMEjlmRg7+pH00SL2OzRiRfHbQPCqzuhZRCbQJRrblCpvcSFmy/BbjFz74EupX+bRVE45EEt4S8wQ==)
     nft:
       avatar:
-        contract-address: 0xd8DBA2adf6588c9e2e1b8fAC481B0d9a480ffc9c
+        contract-address: 0x0f1435DE1de249d4085C2BF6053516571ab7fc1A
         owner: '0xCD6F36a538659F42df5e58663582b9952212Fecf'
         owner-private-key: ENC(qSb96zi+2sTC1Px960+oIdG4eTiE2Va7yNPCeemqY4qUgPPdNG4qG520Mqx+8h7RCCVo+0nBWg1xbmNtXGSzB0z4hVg23yWQ7qSjACwvdTgEBXv99QBBVriierfWAnzclSxhGad4+eQBp+wtY0HeJw==)
       opus:

@@ -51,7 +51,7 @@ contract MyNFT is ERC721, ERC721Enumerable, Ownable {
 
     //获取白名单状态
     function getWhiteListActive() public view returns (bool){
-        return _isSaleActive;
+        return _isWhiteListActive;
     }
 
     //获取预售开关状态
