@@ -44,6 +44,8 @@ contract MyNFT is ERC721, ERC721Enumerable, Ownable {
 
     constructor() ERC721("SAD_AVATAR", "SADA") {}
 
+    function () payable public {}
+
     //判断是否在白名单
     function isInWhitelist(address now) public view returns (bool){
         return whitelist[now];
@@ -164,18 +166,18 @@ contract MyNFT is ERC721, ERC721Enumerable, Ownable {
         );
         require(nums <= maxMint, "Sale would exceed max mint");
         require(nums * mintPrice <= msg.value, "Not enough ether sent");
-        if (_isWhiteListActive) {
-            require(whitelist[msg.sender], "Not in whitelist");
-        }
+        // if (_isWhiteListActive) {
+        //     require(whitelist[msg.sender], "Not in whitelist");
+        // }
         _mintSADAvatar(nums, msg.sender);
-        emit TokenMinted(totalSupply());
+        //emit TokenMinted(totalSupply());
     }
 
     //mint 函数具体实现
     function _mintSADAvatar(uint256 nums, address recipient) internal {
-        uint256 supply = totalSupply();
+        uint256 mintIndex = totalSupply();
         for (uint256 i = 0; i < nums; i++) {
-            _safeMint(recipient, supply + i);
+            _safeMint(recipient, mintIndex);
         }
     }
 
@@ -210,7 +212,7 @@ contract MyNFT is ERC721, ERC721Enumerable, Ownable {
         address to,
         uint256 tokenId,
         uint256 batchSize) internal override(ERC721, ERC721Enumerable) {
-        require(_isTransferActive, "Transfer is not active");
+        //require(_isTransferActive, "Transfer is not active");
         super._beforeTokenTransfer(from, to, tokenId, 1);
     }
 
